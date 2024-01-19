@@ -6,11 +6,13 @@ import os
 import time
 import nltk
 import creds
-
+from datetime import datetime, timedelta
+import asyncio
 
 CONVERSATION_LIMIT = 20
 
 class Bot(commands.Bot):
+    last_response_time = datetime.now()
 
     conversation = list()
 
@@ -19,7 +21,7 @@ class Bot(commands.Bot):
         # prefix can be a callable, which returns a list of strings or a string...
         # initial_channels can also be a callable which returns a list of strings...
         
-        Bot.conversation.append({ 'role': 'system', 'content': "Sempre responda em portugues, não faça respostas muito longas" })
+        Bot.conversation.append({ 'role': 'system', 'content': "Sempre responda em portugues, não faça respostas muito longas, seu nome é Iryn, não faça perguntas que esperam uma resposta" })
         super().__init__(token= creds.TWITCH_TOKEN, prefix='!', initial_channels=[creds.TWITCH_CHANNEL])
 
     async def event_ready(self):
@@ -28,6 +30,11 @@ class Bot(commands.Bot):
         print(f'Logged in as | {self.nick}')
 
     async def event_message(self, message):
+        time_since_last_response = datetime.now() - Bot.last_response_time
+        if time_since_last_response < timedelta(seconds=2):
+            print(f'Esperando {10 - time_since_last_response.seconds} segundos antes de responder novamente...')
+            return
+        
         # Messages with echo set to True are messages sent by the bot...
         # For now we just want to ignore them...
         if message.echo:
@@ -48,7 +55,7 @@ class Bot(commands.Bot):
         print(message.content)
         print(message.author.name)
         print(Bot.conversation)
-
+    
         content = message.content.encode(encoding='ASCII', errors='ignore').decode()
         print("Esse e o content: ", content)
         Bot.conversation.append({ 'role': 'user', 'content': content})
@@ -58,7 +65,7 @@ class Bot(commands.Bot):
 
         response = openai_chat_completion(Bot.conversation)
         print('Iryn:' , response)
-
+        
         if(Bot.conversation.count({ 'role': 'assistant', 'content': response }) == 0):
             Bot.conversation.append({ 'role': 'assistant', 'content': response })
         
@@ -75,7 +82,11 @@ class Bot(commands.Bot):
             ssml_text += f'<mark name="{response_counter}"/>{s}'
             mark_array.append(s)
             response_counter += 1
-        ssml_text += '</speak>'
+        ssml_text = '<speak>' \
+                '<prosody pitch="25%">'+ ' '.join(f'<mark name="{i}"/>{word}' for i, word in enumerate(response.split(' '))) + \
+                '</prosody>' \
+                '</speak>'
+
 
         input_text = texttospeech.SynthesisInput(ssml = ssml_text)
 
@@ -124,7 +135,10 @@ class Bot(commands.Bot):
                     out.write("\n")
         time.sleep(2)
         open('output.txt', 'w').close()
+        Bot.last_response_time = datetime.now()
 
+        # Adicione um tempo de espera antes de responder à próxima mensagem
+        await asyncio.sleep(2)
 
 
         # Print the contents of our message to console...
