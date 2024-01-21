@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "decisive-fabric-411723",
+  "private_key_id": "05d5cfc65f1e0de44ec28169eb845fe974910e75",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDaeWlTAoy2yK3F\nWnT8eaL0iJLoKfGwK2QcG7D7Rl3p/sh7GXo7m3QJNLlWvyi9EDPZnslvinzHjPNb\nWNIOcmzVLVuvGHGAWsK7nC+Bj+zaFeVXI4avKRpsnPn1JCw8Iqz/vEGyH6/97QWl\naFfrmyxLmh4gC1BEJyuQg3FTBtU7yIav3o9zl1+3Is1edYr91qTptstgMgTyfllp\nS2u1o3TVwbYvfS7Hqfwoz98rA+O4mQWVkOtU4+kJ3vk79GTzOx3vQ8yghVw4Ld0B\nVHZG2QAOuZMfYqVhmNPQj5aEN4+tAAGJ1Tu6gkbtAkxjsgmQpQY4l2kU7P2/A4Wq\n34cexBFrAgMBAAECggEABhonCXUERiSzydPdeaHSHd9krwxg3klP+gMB/fq4q8z8\nf4e2JM0SQCGTXatoMWOu9xCa0r08//vdXjtMXq/uf0PNkEXwAaRHVSMnJojFFlBP\nQBBTdjgBL3BxANpaS/GyAFCbSyTcbwy8QCL6da+3XIM4/S8jtkubyWUKeMWzlgBW\nH39rXit39sUFXzf+lkBfqlW7jhnnHQw/BAu12QgzMCXPPhjbVDOGWprSx0FRK1WK\nhV0RgJLCMM1w73YWJtG9DX468MNjja/oBnGcgF8CkI70WLE1gBc7qmybBxqoikJS\nWlEHr+osszBxh2oQ0x2EzRDQMRle+RC3ya4a5cUz7QKBgQDy1A2farko4WgbW+JU\n3ENat+REclPuNkCxIRGwwl7KGpyGvVHOI4aE/cRx23W8R8pWbjKUU0EbdxKP/kOk\nKqWesD/htoMJdn74MVk9f56Bjm8W9wgANUtlCl8iP6eMk94rOcuXtOh3ibKLvfuY\nf8U2xM8brd7SPHWyOrF2QF217wKBgQDmUyyhNxy1pdT3w09653jejIfuX5LRcf+x\nnIZiY8XcHspd0fRbG99rZwQ9rhUNaC1QjpEx7PiisznP+e3Iay2I3RQ4QOGfmEre\nnCWa0TnxlxWQam03+exE77ABoR5uhDVmnwAzPRJYz+MOfsAgw+hIe5ki1GlGF0Ks\n/jcTVWZ4RQKBgQCSNhahx5wHvnl2B8Rm/l1b8V/zyrc4ttgLD3NccBytKorXIoVw\nTrm/uCEhwVfJ75wooJ+56ctJI1A8/YdzAO7Kdytv1/pcp0naXbRzMDWboszHEiVy\nIqTsCOuxboyPO7XJZzpsdVSILZQhSlqEv2JbEPP3oaCKDDd+ApM6NZV3ZwKBgFpk\nGgfLEUFYq5Pw2qhpX0436MDsUTpRev/BZhwG/Ae/LbxUQYngDnagH1H1l92DHQWY\nbfMiBRIVNIMimuck6OHloaHSFLoFkpx6u2de5Vai7JuYqPRm6QrE5lY9XSwSRsLX\nc8SoGyMvsvRlWhGB0Q9hMmAw7H/NcSVjP0ofIe/hAoGAOYTxENhEd4P4J2hMKtgD\nQsjxwB0Pdo9AqvzH0n9UvCj814FvoMPKA7Pc/+IQz9f7dIK3uTpyVakIaKpN8hrh\n1qD0ljAUm1S42b6GWWsrOikk9aZPUbJ9UXQM6gO98M6Z6aAPmxz42W/MPpM0TZr0\n3odf60EzzYyMu/yqRoN5M9k=\n-----END PRIVATE KEY-----\n",
+  "client_email": "vtuber@decisive-fabric-411723.iam.gserviceaccount.com",
+  "client_id": "108516003144590516692",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vtuber%40decisive-fabric-411723.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
