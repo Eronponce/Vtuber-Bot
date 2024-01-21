@@ -4,12 +4,15 @@ import time
 import vlc
 from google.cloud import texttospeech_v1beta1 as texttospeech
 from twitchio.ext import commands
+import speech_recognition as sr
 
 import creds
 from chat import openai_chat_completion
 
+import keyboard
 
 CONVERSATION_LIMIT = 20
+
 
 
 def atualizar_status_arquivo(status_da_ia):
@@ -59,6 +62,27 @@ def generate_ssml_with_marks(text, counter_start=0):
     ssml_text = f'{ssml_text.strip()}</speak>'
     return ssml_text, mark_array
 
+def recognize_speech():
+    recognizer = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print("Say something:")
+        recognizer.adjust_for_ambient_noise(source)
+
+        while True:
+            try:
+                audio = recognizer.listen(source, timeout=1)  # Listen for 1 second at a time
+                if audio:
+                    text = recognizer.recognize_google(audio, language="pt-BR")
+                    print(f"You said: {text}")
+                    return text
+            except sr.UnknownValueError:
+                print("Could not understand audio.")
+            except sr.RequestError as e:
+                print(f"Could not request results from Google Web Speech API; {e}")
+            except sr.WaitTimeoutError:
+                pass  # Timeout when no speech is detected, continue listening
+
 
 class Bot(commands.Bot):
     conversation = list()
@@ -78,8 +102,9 @@ class Bot(commands.Bot):
 
     async def event_ready(self):
         print(f'Logged in as | {self.nick}')
-
+    
     async def event_message(self, message):
+
         if message.echo:
             return
         if len(message.content) > 120 or len(message.content) < 3:
@@ -137,6 +162,51 @@ class Bot(commands.Bot):
                             {'role': 'user', 'content': content}]
         await self.handle_commands(message)
 
+    def response_to_user(self, content):
+        Bot.conversation.append({'role': 'user', 'content': content})
+        atualizar_status_arquivo("enviando mensagem para o openai ")
+        response = openai_chat_completion(Bot.conversation)
+        
+        if Bot.conversation.count({'role': 'assistant', 'content': response}) == 0:
+            Bot.conversation.append({'role': 'assistant', 'content': response})
+        if len(Bot.conversation) > CONVERSATION_LIMIT:
+            Bot.conversation = Bot.conversation[1:]
+            
+        ssml_text, mark_array = generate_ssml_with_marks(response)
+        atualizar_status_arquivo("Enviando resposta para o google cloud")
+        
+        open('output.txt', 'w').close()
+        response = synthesize_and_play_audio(ssml_text)
+
+        count = 0
+        current = 0
+        for i in range(len(response.timepoints)):
+            count += 1
+            current += 1
+            with open("output.txt", "a", encoding="utf-8") as out:
+                out.write(mark_array[int(response.timepoints[i].mark_name)] + " ")
+            if i != len(response.timepoints) - 1:
+                total_time = response.timepoints[i + 1].time_seconds
+                time.sleep(total_time - response.timepoints[i].time_seconds)
+            if current == 25:
+                    open('output.txt', 'w', encoding="utf-8").close()
+                    current = 0
+                    count = 0
+            elif count % 7 == 0:
+                with open("output.txt", "a", encoding="utf-8") as out:
+                    out.write("\n")
+        time.sleep(2)
+        open('output.txt', 'w').close()
+        Bot.conversation = [{'role': 'system', 'content': Bot.conversation[0]['content']},
+                            {'role': 'user', 'content': content}]
+        
+
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds.GOOGLE_JSON_PATH
 bot = Bot()
+def on_key_event(e):
+    if e.event_type == keyboard.KEY_DOWN and e.name == '+':
+        bot.response_to_user(recognize_speech())
+keyboard.hook(on_key_event)
+
 bot.run()
+keyboard.wait('esc')
