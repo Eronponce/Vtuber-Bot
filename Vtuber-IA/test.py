@@ -51,24 +51,14 @@ def save_as_mp3(audio_data, filename='output2.mp3', sample_width=2, channels=2, 
     audio_segment.export(filename, format='mp3')
 
 def main():
-    print("Press 'P' to start recording. Press 'Q' to stop and save as MP3.")
-    
-    is_recording = False
-    recording_data = []
-
-    while True:
-        if keyboard.is_pressed('p') and not is_recording:
-            print("Recording...")
-            is_recording = True
-            recording_data = record_audio()
-
-        if keyboard.is_pressed('q') and is_recording:
-            print("Stopping recording and saving as MP3...")
-            is_recording = False
-            save_as_mp3(np.concatenate(recording_data))
-            print("Saved as MP3: output2.mp3")
-            run_quickstart()
-            break
+        print("Recording...")
+        recording_data = record_audio()
+        print("Stopping recording and saving as MP3...")
+       
+        save_as_mp3(np.concatenate(recording_data))
+        print("Saved as MP3: output2.mp3")
+        run_quickstart()
+      
 
 if __name__ == "__main__":
     main()
