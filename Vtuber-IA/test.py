@@ -5,11 +5,14 @@ from google.cloud import speech
 import creds
 import os
 
+import sounddevice as sd
+import numpy as np
+import keyboard
+from pydub import AudioSegment
+
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds.GOOGLE_JSON_PATH
 def run_quickstart() -> speech.RecognizeResponse:
     # Instantiates a client
-    client = speech.SpeechClient()
-
     client = speech.SpeechClient()
 
     # Read the content of the local audio file
@@ -19,7 +22,7 @@ def run_quickstart() -> speech.RecognizeResponse:
     audio = speech.RecognitionAudio(content=content)
 
     config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED,
         sample_rate_hertz=16000,
         language_code="pt-BR",
     )
@@ -32,12 +35,8 @@ def run_quickstart() -> speech.RecognizeResponse:
 
 
 
-import sounddevice as sd
-import numpy as np
-import keyboard
-from pydub import AudioSegment
 
-def record_audio(duration=10, sample_rate=44100):
+def record_audio(duration=5, sample_rate=44100):
     recording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2, dtype=np.int16)
     sd.wait()
     return recording
