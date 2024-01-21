@@ -6,5 +6,5 @@ o resto sao libaries normais
 
 
 conda activate iryn
-cd C:\Users\eronp\Downloads\Kuebiko-main\Kuebiko-main\src\rvc
+cd C:\Users\eronp\Downloads\Kuebiko-main\Vtuber-IA
 python main.py

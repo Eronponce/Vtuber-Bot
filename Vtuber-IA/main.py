@@ -29,12 +29,12 @@ def synthesize_and_play_audio(ssml_text):
     )
 
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3,
+        audio_encoding=texttospeech.AudioEncoding.MP3
     )
 
     response = client.synthesize_speech(
-        input=input_text, voice=voice, audio_config=audio_config
-    )
+            request={"input": input_text, "voice": voice, "audio_config": audio_config, "enable_time_pointing": ["SSML_MARK"]}
+        )
 
     with open("output.mp3", "wb") as out:
         out.write(response.audio_content)
@@ -91,17 +91,18 @@ class Bot(commands.Bot):
         content = message.content.encode(encoding='ASCII', errors='ignore').decode()
         ssml_text, mark_array = generate_ssml_with_marks(content)
         atualizar_status_arquivo("Enviando mensagem para o google cloud")
-        response = synthesize_and_play_audio(ssml_text)
-        atualizar_status_arquivo("Processando resposta.")
-
         with open("output.txt", "a", encoding="utf-8") as out:
             out.write(message.content)
+        response = synthesize_and_play_audio(ssml_text)
+        atualizar_status_arquivo("Processando resposta.")
+       
+       
+        
 
-        open('output.txt', 'w').close()
         Bot.conversation.append({'role': 'user', 'content': content})
         atualizar_status_arquivo("enviando mensagem para o openai ")
         response = openai_chat_completion(Bot.conversation)
-
+        
         if Bot.conversation.count({'role': 'assistant', 'content': response}) == 0:
             Bot.conversation.append({'role': 'assistant', 'content': response})
         if len(Bot.conversation) > CONVERSATION_LIMIT:
@@ -109,6 +110,8 @@ class Bot(commands.Bot):
             
         ssml_text, mark_array = generate_ssml_with_marks(response)
         atualizar_status_arquivo("Enviando resposta para o google cloud")
+        
+        open('output.txt', 'w').close()
         response = synthesize_and_play_audio(ssml_text)
 
         count = 0
@@ -133,7 +136,6 @@ class Bot(commands.Bot):
         Bot.conversation = [{'role': 'system', 'content': Bot.conversation[0]['content']},
                             {'role': 'user', 'content': content}]
         await self.handle_commands(message)
-
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds.GOOGLE_JSON_PATH
 bot = Bot()
