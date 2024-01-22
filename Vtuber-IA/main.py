@@ -199,7 +199,7 @@ class Bot(commands.Bot):
         open('output.txt', 'w').close()
         Bot.conversation = [{'role': 'system', 'content': Bot.conversation[0]['content']},
                             {'role': 'user', 'content': content}]
-        
+        atualizar_status_arquivo("Ia está online")
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds.GOOGLE_JSON_PATH
 bot = Bot()
